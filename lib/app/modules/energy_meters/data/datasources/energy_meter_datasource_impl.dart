@@ -15,9 +15,9 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
   @override
   Future<List<EnergyMeterModel>> getEnergyMeters() async {
     try {
-      this.dio.options.headers = <String, String>{ // TODO: Criar interceptor quando criar tela de login
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imd1aWxoZXJtZXBpbnRvMjVAZGlzY2VudGUudWZnLmJyIiwiZXhwIjoxNjMwMTkzOTc1LCJpZFVzdWFyaW8iOnsiU3RyaW5nIjoiNjFmZGY2YjEtMWYxMC0xNzZhLWJhNDUtZmEzZWNiMWU3Mjc3IiwiVmFsaWQiOnRydWV9fQ.rHIu7cC8JmhlqM27dDPpyGA6iwmFL-cH24IGr6Pwe8M"
-      };
+      final payload = await RestClientLogin(this.dio).login(Credentials(login: "guilherme", senha: "123456"));
+      this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
+
       final result = await RestClient(this.dio).getEnergyMeters();
       if (result.response.statusCode == 200) {
         return result.data;
@@ -25,6 +25,7 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
         throw ServerException();
       }
     } on DioError catch(e) {
+      print(e);
       throw ServerException(e.message);
     } catch(e) {
       print(e);
@@ -39,4 +40,36 @@ abstract class RestClient {
 
   @GET("/medidor")
   Future<HttpResponse<List<EnergyMeterModel>>> getEnergyMeters();
+}
+
+
+// TODO: ================ Temporário ======================
+@RestApi(baseUrl: "http://192.168.1.9:9000/")
+abstract class RestClientLogin {
+  factory RestClientLogin(Dio dio) = _RestClientLogin;
+
+  @POST("/login")
+  Future<LoginDTO> login(@Body() Credentials crendetials);
+}
+
+class LoginDTO {
+  String? token;
+
+  LoginDTO({this.token});
+
+  factory LoginDTO.fromJson(Map<String, dynamic> json) => LoginDTO(
+      token: json['token']);
+}
+
+class Credentials {
+  final String login;
+  final String senha;
+
+  const Credentials({required this.login, required this.senha});
+
+  Map<String, dynamic> toJson() => {
+    'login': login,
+    'senha': senha
+  };
+
 }

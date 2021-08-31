@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="clip-logo">
+      <rect width="512" height="512"/>
+    </clipPath>
+  </defs>
+  <g id="logo" clip-path="url(#clip-logo)">
+    <g id="logo-2" data-name="logo" transform="translate(-34 -344)">
+      <path id="flash" d="M209.847,59.43h-40.71L206.876,0H159.331L114.759,89.145h35.064l-35.064,83.2Z" transform="translate(71.968 672.734)" fill="#ecba16"/>
+      <g id="Grupo_6" data-name="Grupo 6" transform="translate(87 355)">
+        <g id="Grupo_3" data-name="Grupo 3" transform="translate(218.007 0)">
+          <path id="União_2" data-name="União 2" d="M0,139.154V46.385H162.346v92.769L81.173,185.538ZM0,46.385,81.173,0l81.173,46.385Z" transform="translate(0)" fill="#0075be"/>
+        </g>
+        <g id="Grupo_5" data-name="Grupo 5" transform="translate(229.603 280.626)">
+          <path id="União_4" data-name="União 4" d="M0,115.961V39.427H136.834v76.534L68.417,155.388ZM0,39.427,68.417,0l68.417,39.427Z" transform="translate(0 0)" fill="#0075be"/>
+        </g>
+        <g id="Grupo_4" data-name="Grupo 4" transform="translate(299.18 171.623)">
+          <path id="União_3" data-name="União 3" d="M0,92.769V30.15H106.685V92.769l-53.343,30.15ZM0,30.15,53.342,0l53.343,30.15Z" transform="translate(0 0)" fill="#0075be"/>
+        </g>
+        <g id="Grupo_2" data-name="Grupo 2" transform="translate(83.492 62.619)">
+          <path id="União_6" data-name="União 6" d="M0,92.769V30.15H106.685V92.769l-53.343,30.15ZM0,30.15,53.342,0l53.343,30.15Z" transform="translate(0 0)" fill="#0075be"/>
+        </g>
+        <g id="Grupo_1" data-name="Grupo 1" transform="translate(0 162.346)">
+          <path id="União_5" data-name="União 5" d="M0,115.961V39.427H136.834v76.534L68.417,155.388ZM0,39.427,68.417,0l68.417,39.427Z" transform="translate(0 0)" fill="#0075be"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
