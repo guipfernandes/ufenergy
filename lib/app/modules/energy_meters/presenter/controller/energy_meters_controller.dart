@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:ufenergy/app/core/states/control_state.dart';
 import 'package:ufenergy/app/core/usecase/usecase.dart';
@@ -16,7 +17,7 @@ abstract class EnergyMetersControllerBase with Store {
 
   getEnergyMeters() async {
     setState(LoadingState());
-    var result = await usecase(NoParams());
+    final result = await usecase(NoParams());
     return result.fold((error) => setState(ErrorState(error)), (result) => setState(SuccessState<List<EnergyMeterEntity>>(result)));
   }
 
@@ -25,5 +26,9 @@ abstract class EnergyMetersControllerBase with Store {
 
   @action
   setState(ControlState<List<EnergyMeterEntity>> value) => state = value;
+
+  final latitudeController = TextEditingController();
+  final longituteController = TextEditingController();
+
 }
 

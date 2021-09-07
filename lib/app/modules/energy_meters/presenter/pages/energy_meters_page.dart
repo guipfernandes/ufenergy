@@ -33,7 +33,9 @@ class _EnergyMetersPageState extends ModularState<EnergyMetersPage, EnergyMeters
                 initial: () => Container(),
                 loading: () => Center(child: CircularProgressIndicator()),
                 success: (energyMeters) => EnergyMeterList(energyMeters: energyMeters),
-                error: (failure) => Center(child: Text("Não foi possível consultar os medidores."),)
+                error: (failure) => Center(
+                  child: Text("Não foi possível consultar os medidores.", style: TextStyle(fontSize: 16.0),)
+                )
             );
           },
         ),

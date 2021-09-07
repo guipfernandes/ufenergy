@@ -6,6 +6,8 @@ import 'package:ufenergy/app/core/utils/date_utils.dart';
 import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_entity.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
 
+import 'localization_dialog.dart';
+
 class EnergyMeterList extends StatelessWidget {
   final List<EnergyMeterEntity> energyMeters;
 
@@ -29,6 +31,11 @@ class EnergyMeterList extends StatelessWidget {
           ? Image.asset(AssetIcons.solar_energy, height: 60)
           : Image.asset(AssetIcons.electric_meter, height: 60),
       subtitle: buildEnergyMeterItemBody(context , energyMeter),
+      onTap: () {
+        showDialog(context: context, builder: (BuildContext context) {
+          return LocalizationDialog(energyMeter: energyMeter,);
+        });
+      },
     );
   }
 

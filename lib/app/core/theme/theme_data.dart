@@ -52,7 +52,36 @@ ThemeData lightThemeData() {
       centerTitle: true,
       titleTextStyle: textTheme.headline6,
     ),
-    textTheme: textTheme
+    textTheme: textTheme,
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: GoogleFonts.roboto(color: Colors.black38, fontSize: 16.0),
+      hintStyle: GoogleFonts.roboto(color: Colors.grey.withOpacity(0.7), fontSize: 16.0),
+      helperStyle: GoogleFonts.roboto(color: Colors.grey.withOpacity(0.7), fontSize: 12.0),
+      border: InputBorder.none,
+      alignLabelWithHint: true,
+      filled: false,
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        borderSide: BorderSide(color: Colors.black26),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        borderSide: BorderSide(color: Colors.black26),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+        borderSide: BorderSide(color: Colors.transparent),
+      ),
+    ),
   );
 }
 
