@@ -15,6 +15,9 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
   @override
   Future<List<EnergyMeterModel>> getEnergyMeters() async {
     try {
+      this.dio.options.connectTimeout = 10 * 1000;
+      this.dio.options.sendTimeout = 10 * 1000;
+      this.dio.options.receiveTimeout = 30 * 1000;
       final payload = await RestClientLogin(this.dio).login(Credentials(login: "guilherme", senha: "123456"));
       this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
 

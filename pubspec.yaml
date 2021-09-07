@@ -44,8 +44,13 @@ dependencies:
   # Internationalization
   intl: ^0.17.0
 
-  #SVG Rendering
-  flutter_svg: ^0.22.0
+  # Maps and localization
+  google_maps_flutter: ^2.0.8
+  geolocator: ^7.6.0
+  flutter_polyline_points: ^1.0.0
+
+  # Fonts
+  google_fonts: ^2.1.0
 
 dev_dependencies:
   flutter_test:

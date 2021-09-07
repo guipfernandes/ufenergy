@@ -15,8 +15,8 @@ abstract class EnergyMetersControllerBase with Store {
   EnergyMetersControllerBase(this.usecase) : super();
 
   getEnergyMeters() async {
+    setState(LoadingState());
     var result = await usecase(NoParams());
-    state = LoadingState();
     return result.fold((error) => setState(ErrorState(error)), (result) => setState(SuccessState<List<EnergyMeterEntity>>(result)));
   }
 

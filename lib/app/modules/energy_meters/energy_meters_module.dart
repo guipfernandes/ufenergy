@@ -5,8 +5,11 @@ import 'package:ufenergy/app/modules/energy_meters/data/repositories/energy_mete
 import 'package:ufenergy/app/modules/energy_meters/domain/usecases/get_energy_meters_usecase.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/controller/energy_meters_controller.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/energy_meters_page.dart';
+import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
 
 class EnergyMetersModule extends Module {
+  static const String routeName = '/energy-meters';
+
   @override
   final List<Bind> binds = [
     Bind.lazySingleton((i) => EnergyMetersController(i())),
@@ -19,5 +22,6 @@ class EnergyMetersModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => EnergyMetersPage()),
+    ChildRoute('/maps', child: (_, args) => MapsPage(energyMeter: args.data,)),
   ];
 }

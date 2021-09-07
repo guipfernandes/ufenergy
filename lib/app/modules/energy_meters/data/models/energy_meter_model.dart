@@ -25,10 +25,10 @@ class EnergyMeterModel extends EnergyMeterEntity {
   factory EnergyMeterModel.fromJson(Map<String, dynamic> json) => EnergyMeterModel(
       id: json['id'],
       name: json['denominacao'],
-      model: json['model'],
-      type: json['type'],
+      model: json['tipo']['nome'],
+      type: json['tipo_medicao']['denominacao'],
       address: json['address'],
-      latitude: json['Latitude'] is int ? json['Latitude'].toDouble() : json['Latitude'],
+      latitude: json['latitude'] is int ? json['latitude'].toDouble() : json['latitude'],
       longitude: json['longitude'] is int ? json['longitude'].toDouble() : json['longitude'],
       ultimaLeitura: DateTime.parse(json['data_ultima_leitura']),
       ultimaSincronizacao: DateTime.parse(json['ultima_data_sincronizada']));
