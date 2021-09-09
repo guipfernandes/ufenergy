@@ -22,6 +22,11 @@ class EnergyMetersModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute(Modular.initialRoute, child: (_, args) => EnergyMetersPage()),
-    ChildRoute('/maps', child: (_, args) => MapsPage(energyMeter: args.data,)),
+    ChildRoute('/maps', child: (_, args) => MapsPage(
+              energyMeter: args.data?.energyMeter,
+              selectMode: args.data?.selectMode ?? false,
+              energyMeterPosition: args.data?.energyMeterPosition,
+            )
+    ),
   ];
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ufenergy/app/core/utils/asset_icons.dart';
+import 'package:ufenergy/app/core/utils/string_utils.dart';
 import 'package:ufenergy/app/core/widgets/text_field_widget.dart';
 import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_entity.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/controller/energy_meters_controller.dart';
@@ -109,10 +111,22 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
         backgroundColor: Colors.grey.shade100,
         shape: ContinuousRectangleBorder(),
       ),
-      onPressed: () {
-        Modular.to.pushNamed(Modular.to.modulePath + MapsPage.routeName);
-      },
+      onPressed: onSelectOnMap,
     );
+  }
+
+  Future<void> onSelectOnMap() async {
+    LatLng? energyMeterPosition;
+    if (!isEmpty(controller.latitudeController.text) && !isEmpty(controller.longituteController.text)) {
+      energyMeterPosition = LatLng(double.parse(controller.latitudeController.text), double.parse(controller.longituteController.text));
+    }
+    LatLng? selectedPosition = await Modular.to.pushNamed<LatLng>(Modular.to.modulePath + MapsPage.routeName,
+        arguments: MapsPageArgs(selectMode: true, energyMeterPosition: energyMeterPosition));
+
+    if (selectedPosition != null) {
+      controller.latitudeController.text = "${selectedPosition.latitude}";
+      controller.longituteController.text = "${selectedPosition.longitude}";
+    }
   }
 
   Widget buildDialogBottom() {

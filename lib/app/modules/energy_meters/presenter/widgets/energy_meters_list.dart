@@ -51,7 +51,7 @@ class EnergyMeterList extends StatelessWidget {
           constraints: BoxConstraints(),
           icon: Image.asset(AssetIcons.map_marked, height: 18, color: Theme.of(context).colorScheme.secondaryVariant,),
           onPressed: () {
-            Modular.to.pushNamed(Modular.to.modulePath + MapsPage.routeName, arguments: energyMeter);
+            Modular.to.pushNamed(Modular.to.modulePath + MapsPage.routeName, arguments: MapsPageArgs(energyMeter: energyMeter));
           },
         )
       ],

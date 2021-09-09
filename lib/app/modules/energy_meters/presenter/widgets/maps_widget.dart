@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,8 +10,16 @@ import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_
 class MapsWidget extends StatefulWidget {
   final List<EnergyMeterEntity>? energyMeters;
   final EnergyMeterEntity? selectedEnergyMeter;
+  final bool selectMode;
+  final LatLng? energyMeterPosition;
 
-  const MapsWidget({Key? key, this.energyMeters, this.selectedEnergyMeter}) : super(key: key);
+  const MapsWidget({
+    Key? key,
+    this.energyMeters,
+    this.selectedEnergyMeter,
+    this.selectMode = false,
+    this.energyMeterPosition
+  }) : super(key: key);
 
   @override
   _MapsWidgetState createState() => _MapsWidgetState();
@@ -19,6 +28,7 @@ class MapsWidget extends StatefulWidget {
 class _MapsWidgetState extends State<MapsWidget> {
   GoogleMapController? mapController;
   late CameraPosition initialLocation;
+  late LatLng currentPosition;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   Marker? selectedMarker;
 
@@ -26,10 +36,12 @@ class _MapsWidgetState extends State<MapsWidget> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
 
+  LatLng? selectPositionMarked;
+
   @override
   void initState() {
     super.initState();
-    initialLocation = CameraPosition(target: LatLng(-16.676670, -49.242796), zoom: 16.0); // Campus Colemar Natal e Silva
+    initialLocation = CameraPosition(target: LatLng(-16.6367453, -49.2550010), zoom: 13.5);
     generateMarkers();
   }
 
@@ -38,17 +50,25 @@ class _MapsWidgetState extends State<MapsWidget> {
     if (energyMeters == null) return;
     for (var energyMeter in energyMeters) {
       if (energyMeter.latitude != null && energyMeter.longitude != null) {
-        final markerId = MarkerId("${energyMeter.id}");
-        final Marker marker = Marker(
-          markerId: markerId,
-          position: LatLng(energyMeter.latitude!, energyMeter.longitude!),
-          onTap: () {
-            onMarkerTapped(markerId);
-          },
+        addMarker(LatLng(energyMeter.latitude!, energyMeter.longitude!),
+            markerId: MarkerId("${energyMeter.id}"),
+            onTap: onMarkerTapped
         );
-        markers[markerId] = marker;
       }
     }
+  }
+
+  void addMarker(LatLng position, {MarkerId? markerId, Function? onTap, bool? draggable}) {
+    final id = markerId ?? MarkerId("${position.latitude}${position.longitude}");
+    final Marker marker = Marker(
+      markerId: id,
+      position: position,
+      draggable: draggable ?? false,
+      onTap: () {
+        if (onTap != null) onTap(id);
+      },
+    );
+    markers[id] = marker;
   }
 
   void onMarkerTapped(MarkerId? markerId) {
@@ -82,7 +102,7 @@ class _MapsWidgetState extends State<MapsWidget> {
     });
   }
 
-  Future<Position> getCurrentPosition() async {
+  Future<LatLng> getCurrentPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -102,15 +122,13 @@ class _MapsWidgetState extends State<MapsWidget> {
       return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    currentPosition = LatLng(position.latitude, position.longitude);
+    return currentPosition;
   }
 
   Future<void> animateToCurrentPosition() async {
-    Position currentPosition = await getCurrentPosition();
-    animateCameraToPosition(LatLng(
-      currentPosition.latitude,
-      currentPosition.longitude,
-    ));
+    animateCameraToPosition(currentPosition);
   }
 
   void animateCameraToPosition(LatLng position) {
@@ -126,8 +144,7 @@ class _MapsWidgetState extends State<MapsWidget> {
 
   Future<void> determineRouteToSelectedMarker() async {
     if (selectedMarker == null) return;
-    Position currentPosition = await getCurrentPosition();
-    LatLng startCoordinates = LatLng(currentPosition.latitude, currentPosition.longitude);
+    LatLng startCoordinates = currentPosition;
     LatLng destinationCoordinates = selectedMarker!.position;
 
     rearrangeMapView(startCoordinates, destinationCoordinates);
@@ -184,6 +201,23 @@ class _MapsWidgetState extends State<MapsWidget> {
     polylines[id] = polyline;
   }
 
+  Future<void> onMapCreated(GoogleMapController controller) async {
+    mapController = controller;
+    await getCurrentPosition();
+    if (widget.selectedEnergyMeter != null) {
+      selectMarker(MarkerId("${widget.selectedEnergyMeter!.id}"));
+      if (selectedMarker != null) animateCameraToPosition(selectedMarker!.position);
+    }
+
+    if (widget.selectMode) {
+      if (widget.energyMeterPosition != null) {
+        animateCameraToPosition(widget.energyMeterPosition!);
+      } else {
+        animateToCurrentPosition();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -197,24 +231,53 @@ class _MapsWidgetState extends State<MapsWidget> {
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
               zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
+              zoomControlsEnabled: !widget.selectMode,
               mapType: MapType.normal,
               padding: EdgeInsets.only(top: 30),
               markers: Set<Marker>.of(markers.values),
               polylines: Set<Polyline>.of(polylines.values),
-              onTap: (LatLng coordinates) {
-                onMarkerTapped(null);
-              },
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-                if (widget.selectedEnergyMeter != null) {
-                  selectMarker(MarkerId("${widget.selectedEnergyMeter!.id}"));
-                  if (selectedMarker != null) animateCameraToPosition(selectedMarker!.position);
+              onTap: (LatLng position) {
+                if (!widget.selectMode) {
+                  onMarkerTapped(null);
                 }
               },
+              onCameraMove: (CameraPosition cameraPosition) {
+                if (widget.selectMode) {
+                  selectPositionMarked = cameraPosition.target;
+                }
+              },
+              onMapCreated: onMapCreated,
             ),
+            if (widget.selectMode) buildSelectModeMarker(),
+            if (widget.selectMode) buildSelectModeButton(),
             // buildOptionsButtons(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildSelectModeMarker() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 32.0),
+      child: Center(child: Icon(Icons.location_on, size: 42,)),
+    );
+  }
+
+  Widget buildSelectModeButton() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width * 0.9,
+        padding: const EdgeInsets.only(bottom: 12.0),
+        child: ElevatedButton(
+            child: Text("Selecionar"),
+            onPressed: () {
+              if (selectPositionMarked != null) {
+                Modular.to.pop<LatLng>(selectPositionMarked!);
+              }
+            }
         ),
       ),
     );
