@@ -14,13 +14,13 @@ class EnergyMeterEntity extends Equatable {
   EnergyMeterEntity({
     required this.id,
     required this.name,
-    required this.model,
-    required this.type,
-    required this.address,
-    required this.latitude,
-    required this.longitude,
-    required this.ultimaLeitura,
-    required this.ultimaSincronizacao
+    this.model,
+    this.type,
+    this.address,
+    this.latitude,
+    this.longitude,
+    this.ultimaLeitura,
+    this.ultimaSincronizacao
   });
 
   @override

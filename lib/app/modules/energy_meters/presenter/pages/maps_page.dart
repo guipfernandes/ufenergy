@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ufenergy/app/core/widgets/loading_widget.dart';
 import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_entity.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/controller/energy_meters_controller.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/widgets/maps_widget.dart';
@@ -41,9 +42,9 @@ class _MapsPageState extends ModularState<MapsPage, EnergyMetersController> {
                 )
               : Observer(
                   builder: (_) {
-                    return controller.state.when(
+                    return controller.listEnergyMetersState.when(
                         initial: () => Container(),
-                        loading: () => Center(child: CircularProgressIndicator()),
+                        loading: () => LoadingWidget(),
                         success: (energyMeters) => MapsWidget(
                               energyMeters: energyMeters,
                               selectedEnergyMeter: widget.energyMeter,

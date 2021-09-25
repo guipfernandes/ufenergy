@@ -79,7 +79,7 @@ class EnergyMeterList extends StatelessWidget {
           text: TextSpan(
             style: Theme.of(context).textTheme.bodyText2,
             children: <TextSpan>[
-              new TextSpan(text: 'Latitude: ', style: Theme.of(context).textTheme.bodyText1),
+              new TextSpan(text: 'Longitude: ', style: Theme.of(context).textTheme.bodyText1),
               new TextSpan(text: '${energyMeter.longitude ?? ""}'),
             ],
           ),

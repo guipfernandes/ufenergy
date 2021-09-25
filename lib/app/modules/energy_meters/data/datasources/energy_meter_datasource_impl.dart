@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:ufenergy/app/core/usecase/errors/exceptions.dart';
+import 'package:ufenergy/app/modules/energy_meters/data/models/energy_meter_localization_model.dart';
 import 'package:ufenergy/app/modules/energy_meters/data/models/energy_meter_model.dart';
 
 import 'energy_meter_datasource.dart';
@@ -35,6 +36,30 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
       throw ServerException();
     }
   }
+
+  @override
+  Future<void> updateMeterLocalization(EnergyMeterLocalizationModel energyMeterLocalization) async {
+    try {
+      this.dio.options.connectTimeout = 10 * 1000;
+      this.dio.options.sendTimeout = 10 * 1000;
+      this.dio.options.receiveTimeout = 30 * 1000;
+      final payload = await RestClientLogin(this.dio).login(Credentials(login: "guilherme", senha: "123456"));
+      this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
+
+      final result = await RestClient(this.dio).updateMeterLocalization(energyMeterLocalization);
+      if (result.response.statusCode == 200) {
+        return result.data;
+      } else {
+        throw ServerException();
+      }
+    } on DioError catch(e) {
+      print(e);
+      throw ServerException(e.message);
+    } catch(e) {
+      print(e);
+      throw ServerException();
+    }
+  }
 }
 
 @RestApi(baseUrl: "http://192.168.1.9:9000/api/v1/") // TODO: abstrair baseUrl de acordo com o ambiente Dev ou Prod
@@ -43,6 +68,9 @@ abstract class RestClient {
 
   @GET("/medidor")
   Future<HttpResponse<List<EnergyMeterModel>>> getEnergyMeters();
+
+  @PUT("/localizacao")
+  Future<HttpResponse<void>> updateMeterLocalization(@Body() EnergyMeterLocalizationModel energyMeterLocalization);
 }
 
 

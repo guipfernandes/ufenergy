@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ufenergy/app/core/widgets/app_bar_widget.dart';
 import 'package:ufenergy/app/core/widgets/drawer_widget.dart';
+import 'package:ufenergy/app/core/widgets/loading_widget.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/controller/energy_meters_controller.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/widgets/energy_meters_list.dart';
 
@@ -29,10 +30,10 @@ class _EnergyMetersPageState extends ModularState<EnergyMetersPage, EnergyMeters
       body: Container(
         child: Observer(
           builder: (_) {
-            return controller.state.when(
+            return controller.listEnergyMetersState.when(
                 initial: () => Container(),
-                loading: () => Center(child: CircularProgressIndicator()),
-                success: (energyMeters) => EnergyMeterList(energyMeters: energyMeters),
+                loading: () => LoadingWidget(),
+                success: (energyMeters) => EnergyMeterList(energyMeters: energyMeters!),
                 error: (failure) => Center(
                   child: Text("Não foi possível consultar os medidores.", style: TextStyle(fontSize: 16.0),)
                 )

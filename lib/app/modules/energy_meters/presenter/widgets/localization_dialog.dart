@@ -1,35 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ufenergy/app/core/states/control_state.dart';
 import 'package:ufenergy/app/core/utils/asset_icons.dart';
 import 'package:ufenergy/app/core/utils/string_utils.dart';
+import 'package:ufenergy/app/core/widgets/save_button.dart';
 import 'package:ufenergy/app/core/widgets/text_field_widget.dart';
 import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_entity.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/controller/energy_meters_controller.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
 
 class LocalizationDialog extends StatefulWidget {
-  final EnergyMeterEntity? energyMeter;
+  final EnergyMeterEntity energyMeter;
 
-  const LocalizationDialog({Key? key, this.energyMeter}) : super(key: key);
+  const LocalizationDialog({Key? key, required this.energyMeter}) : super(key: key);
 
   @override
   _LocalizationDialogState createState() => _LocalizationDialogState();
 }
 
-class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMetersController> {
+class _LocalizationDialogState extends State<LocalizationDialog> {
+  final controller = Modular.get<EnergyMetersController>();
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FocusNode _latitudeFocus = FocusNode();
   final FocusNode _longitudeFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    if (widget.energyMeter != null) {
-      final energyMeter = widget.energyMeter!;
-      controller.latitudeController.text = energyMeter.latitude != null ? "${energyMeter.latitude}" : "";
-      controller.longituteController.text = energyMeter.longitude != null ? "${energyMeter.longitude}" : "";
-    }
+    final energyMeter = widget.energyMeter;
+    controller.latitudeController.text = energyMeter.latitude != null ? "${energyMeter.latitude}" : "";
+    controller.longituteController.text = energyMeter.longitude != null ? "${energyMeter.longitude}" : "";
   }
 
   @override
@@ -37,8 +41,9 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Container(
-        height: 320,
+        height: 400,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               buildDialogTitle(),
               buildDialogBody(),
@@ -51,7 +56,7 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
 
   Widget buildDialogTitle() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 12.0),
+      padding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 12.0),
       child: Center(
         child: Text(
           "Localização",
@@ -66,11 +71,22 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 4.0),
         child: ListBody(children: [
-          latitudeField(),
-          SizedBox(height: 10.0),
-          longitudeField(),
-          SizedBox(height: 5.0),
-          selectOnMapButton(),
+          Center(child: Text(widget.energyMeter.name)),
+          Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 20.0),
+                latitudeField(),
+                SizedBox(height: 10.0),
+                longitudeField(),
+                SizedBox(height: 5.0),
+                selectOnMapButton(),
+              ],
+            ),
+          ),
         ]),
       ),
     );
@@ -84,6 +100,7 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
       currentFocus: _latitudeFocus,
       nextFocus: _longitudeFocus,
       controller: controller.latitudeController,
+      validate: true
     );
   }
 
@@ -93,6 +110,7 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
       textInputType: TextInputType.numberWithOptions(signed: true, decimal: true),
       currentFocus: _longitudeFocus,
       controller: controller.longituteController,
+      validate: true
     );
   }
 
@@ -131,13 +149,18 @@ class _LocalizationDialogState extends ModularState<LocalizationDialog, EnergyMe
 
   Widget buildDialogBottom() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: ElevatedButton.icon(
-        label: Text("Salvar"),
-        icon: Icon(Icons.check),
-        style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)), fixedSize: Size(130, 50)),
-        onPressed: () {},
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Observer(
+        builder: (_) {
+          return SaveButton(
+            loading: controller.updateLocalizationState is LoadingState ? true : false,
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                controller.updateEnergyMeterLocalization(widget.energyMeter);
+              }
+            },
+          );
+        }
       ),
     );
   }

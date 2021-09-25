@@ -71,7 +71,7 @@ ThemeData lightThemeData() {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(7.0)),
-        borderSide: BorderSide(color: Colors.transparent),
+        borderSide: BorderSide(color: Colors.grey.shade300),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(7.0)),
@@ -79,7 +79,7 @@ ThemeData lightThemeData() {
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(7.0)),
-        borderSide: BorderSide(color: Colors.transparent),
+        borderSide: BorderSide(color: Colors.grey.shade300),
       ),
     ),
   );
