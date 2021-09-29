@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ufenergy/app/core/utils/asset_icons.dart';
+import 'package:ufenergy/app/modules/energy_measurements/energy_measurements_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/energy_meters_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
 
@@ -58,6 +59,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
             ),
             buildMenuOption("Medidores", icon: AssetIcons.electric_meter_menu, routeName: EnergyMetersModule.routeName),
+            buildMenuOption("Medições", icon: AssetIcons.electric_meter_menu, routeName: EnergyMeasurementsModule.routeName),
             buildMenuOption("Mapa", icon: AssetIcons.map_marked, routeName: EnergyMetersModule.routeName + MapsPage.routeName),
           ],
         ),

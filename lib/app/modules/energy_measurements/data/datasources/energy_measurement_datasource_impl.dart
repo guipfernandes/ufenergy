@@ -1,20 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:ufenergy/app/core/usecase/errors/exceptions.dart';
-import 'package:ufenergy/app/modules/energy_meters/data/models/energy_meter_localization_model.dart';
-import 'package:ufenergy/app/modules/energy_meters/data/models/energy_meter_model.dart';
+import 'package:ufenergy/app/modules/energy_measurements/data/models/energy_measurement_model.dart';
 
-import 'energy_meter_datasource.dart';
+import 'energy_measurement_datasource.dart';
 
-part 'energy_meter_datasource_impl.g.dart';
+part 'energy_measurement_datasource_impl.g.dart';
 
-class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
+class EnergyMeasurementDatasourceImpl implements IEnergyMeasurementDatasource {
   final Dio dio;
 
-  EnergyMeterDatasourceImpl(this.dio);
+  EnergyMeasurementDatasourceImpl(this.dio);
 
   @override
-  Future<List<EnergyMeterModel>> getEnergyMeters() async {
+  Future<List<EnergyMeasurementModel>> getEnergyMeasurements() async {
     try {
       this.dio.options.connectTimeout = 10 * 1000;
       this.dio.options.sendTimeout = 10 * 1000;
@@ -22,7 +21,8 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
       final payload = await RestClientLogin(this.dio).login(Credentials(login: "guilherme", senha: "123456"));
       this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
 
-      final result = await RestClient(this.dio).getEnergyMeters();
+
+      final result = await RestClient(this.dio).getEnergyMeasurements("AGRONOMIA", DateTime.parse("2021-08-22T01:00:00").toIso8601String(), DateTime.parse("2021-08-24T11:00:00").toIso8601String());
       if (result.response.statusCode == 200) {
         return result.data;
       } else {
@@ -37,42 +37,20 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
     }
   }
 
-  @override
-  Future<void> updateMeterLocalization(EnergyMeterLocalizationModel energyMeterLocalization) async {
-    try {
-      this.dio.options.connectTimeout = 10 * 1000;
-      this.dio.options.sendTimeout = 10 * 1000;
-      this.dio.options.receiveTimeout = 30 * 1000;
-      final payload = await RestClientLogin(this.dio).login(Credentials(login: "guilherme", senha: "123456"));
-      this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
-
-      final result = await RestClient(this.dio).updateMeterLocalization(energyMeterLocalization);
-      if (result.response.statusCode == 200) {
-        return result.data;
-      } else {
-        throw ServerException();
-      }
-    } on DioError catch(e) {
-      print(e);
-      throw ServerException(e.message);
-    } catch(e) {
-      print(e);
-      throw ServerException();
-    }
-  }
 }
 
 @RestApi(baseUrl: "http://192.168.1.9:9000/api/v1/") // TODO: abstrair baseUrl de acordo com o ambiente Dev ou Prod
 abstract class RestClient {
   factory RestClient(Dio dio) = _RestClient;
 
-  @GET("/medidor")
-  Future<HttpResponse<List<EnergyMeterModel>>> getEnergyMeters();
+  @GET("/medicao-hora")
+  Future<HttpResponse<List<EnergyMeasurementModel>>> getEnergyMeasurements(
+      @Query("nomeMedidor") String energyMeterName,
+      @Query("dataMedicaoInicio") String measurementStartDate,
+      @Query("dataMedicaoFim") String measurementEndDate
+  );
 
-  @PUT("medidor/localizacao")
-  Future<HttpResponse<void>> updateMeterLocalization(@Body() EnergyMeterLocalizationModel energyMeterLocalization);
 }
-
 
 // TODO: ================ Temporário ======================
 @RestApi(baseUrl: "http://192.168.1.9:9000/")
