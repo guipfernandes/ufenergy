@@ -28,6 +28,39 @@ mixin _$EnergyMeasurementsController
     });
   }
 
+  final _$listEnergyMetersStateAtom =
+      Atom(name: 'EnergyMeasurementsControllerBase.listEnergyMetersState');
+
+  @override
+  ControlState<List<String>> get listEnergyMetersState {
+    _$listEnergyMetersStateAtom.reportRead();
+    return super.listEnergyMetersState;
+  }
+
+  @override
+  set listEnergyMetersState(ControlState<List<String>> value) {
+    _$listEnergyMetersStateAtom.reportWrite(value, super.listEnergyMetersState,
+        () {
+      super.listEnergyMetersState = value;
+    });
+  }
+
+  final _$energyMeterValueAtom =
+      Atom(name: 'EnergyMeasurementsControllerBase.energyMeterValue');
+
+  @override
+  String get energyMeterValue {
+    _$energyMeterValueAtom.reportRead();
+    return super.energyMeterValue;
+  }
+
+  @override
+  set energyMeterValue(String value) {
+    _$energyMeterValueAtom.reportWrite(value, super.energyMeterValue, () {
+      super.energyMeterValue = value;
+    });
+  }
+
   final _$EnergyMeasurementsControllerBaseActionController =
       ActionController(name: 'EnergyMeasurementsControllerBase');
 
@@ -47,9 +80,24 @@ mixin _$EnergyMeasurementsController
   }
 
   @override
+  dynamic setListEnergyMetersState(ControlState<List<String>> value) {
+    final _$actionInfo =
+        _$EnergyMeasurementsControllerBaseActionController.startAction(
+            name: 'EnergyMeasurementsControllerBase.setListEnergyMetersState');
+    try {
+      return super.setListEnergyMetersState(value);
+    } finally {
+      _$EnergyMeasurementsControllerBaseActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-listEnergyMeasurementsState: ${listEnergyMeasurementsState}
+listEnergyMeasurementsState: ${listEnergyMeasurementsState},
+listEnergyMetersState: ${listEnergyMetersState},
+energyMeterValue: ${energyMeterValue}
     ''';
   }
 }

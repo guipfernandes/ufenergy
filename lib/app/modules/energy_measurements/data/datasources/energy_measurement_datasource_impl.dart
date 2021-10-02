@@ -13,7 +13,7 @@ class EnergyMeasurementDatasourceImpl implements IEnergyMeasurementDatasource {
   EnergyMeasurementDatasourceImpl(this.dio);
 
   @override
-  Future<List<EnergyMeasurementModel>> getEnergyMeasurements() async {
+  Future<List<EnergyMeasurementModel>> getEnergyMeasurements(String energyMeter, DateTime startDate, DateTime endDate) async {
     try {
       this.dio.options.connectTimeout = 10 * 1000;
       this.dio.options.sendTimeout = 10 * 1000;
@@ -22,7 +22,7 @@ class EnergyMeasurementDatasourceImpl implements IEnergyMeasurementDatasource {
       this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
 
 
-      final result = await RestClient(this.dio).getEnergyMeasurements("AGRONOMIA", DateTime.parse("2021-08-22T01:00:00").toIso8601String(), DateTime.parse("2021-08-24T11:00:00").toIso8601String());
+      final result = await RestClient(this.dio).getEnergyMeasurements(energyMeter, startDate.toIso8601String(), endDate.toIso8601String());
       if (result.response.statusCode == 200) {
         return result.data;
       } else {

@@ -21,6 +21,7 @@ class TextFieldWidget extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final TextCapitalization? textCapitalization;
   final String? helperText;
+  final EdgeInsetsGeometry? contentPadding;
 
   TextFieldWidget(
       {required this.label,
@@ -41,7 +42,8 @@ class TextFieldWidget extends StatelessWidget {
         this.nextFocus,
         this.textCapitalization,
         this.validator,
-        this.helperText}
+        this.helperText,
+        this.contentPadding}
       );
 
   @override
@@ -67,6 +69,7 @@ class TextFieldWidget extends StatelessWidget {
             : [],
         decoration: InputDecoration(
             labelText: label,
+            contentPadding: contentPadding,
             prefixIcon: prefixIcon ?? null,
             icon: icon ?? null,
             suffixIcon: suffixIcon ?? null,
