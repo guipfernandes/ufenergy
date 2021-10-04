@@ -21,7 +21,13 @@ class _EnergyMeasurementsPageState extends ModularState<EnergyMeasurementsPage, 
   @override
   void initState() {
     super.initState();
-    controller.getEnergyMeters();
+    controller.getEnergyMeters().then((energyMeters) {
+      DateTime now = DateTime.now();
+      controller.energyMeterValue = energyMeters != null && energyMeters.isNotEmpty ? energyMeters.first : "";
+      controller.dateStartController.text = formatDateTime(now.subtract(Duration(days: 10)), DATE_TIME_FORMAT_TEXT_FIELD);
+      controller.dateEndController.text = formatDateTime(now, DATE_TIME_FORMAT_TEXT_FIELD);
+      controller.getEnergyMeasurements();
+    });
   }
 
   @override
@@ -36,8 +42,9 @@ class _EnergyMeasurementsPageState extends ModularState<EnergyMeasurementsPage, 
                 initial: () => Container(),
                 loading: () => LoadingWidget(),
                 success: buildSuccessState,
-                error: (failure) => Center(
-                  child: MeasurementsLineChartFilter()
+                error: (failure) => buildHeaderBodyPage(
+                    MeasurementsLineChartFilter(),
+                    Center(child: Text("Não foi possível consultar as medições.", style: TextStyle(fontSize: 16.0)))
                 )
             );
           },
@@ -47,32 +54,36 @@ class _EnergyMeasurementsPageState extends ModularState<EnergyMeasurementsPage, 
   }
 
   Widget buildSuccessState(List<String>? energyMeters) {
-        DateTime now = DateTime.now();
-        controller.energyMeterValue = energyMeters![0];
-        controller.dateStartController.text = formatDateTime(now.subtract(Duration(days: 10)), DATE_TIME_FORMAT_TEXT_FIELD);
-        controller.dateEndController.text = formatDateTime(now, DATE_TIME_FORMAT_TEXT_FIELD);
-        controller.getEnergyMeasurements();
+    return buildHeaderBodyPage(
+        MeasurementsLineChartFilter(energyMeters: energyMeters),
+        Observer(
+          builder: (_) {
+            return controller.listEnergyMeasurementsState.when(
+                initial: () => Container(),
+                loading: () => LoadingWidget(),
+                success: (energyMeasurements) => MeasurementLineChart(energyMeasurements: energyMeasurements!),
+                error: (failure) => Center(
+                    child: Text(
+                      "Não foi possível consultar as medições.",
+                      style: TextStyle(fontSize: 16.0),
+                    )));
+          },
+        )
+    );
+  }
 
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            MeasurementsLineChartFilter(energyMeters: energyMeters),
-            SizedBox(height: 10,),
-            Expanded(
-              child: Observer(
-                builder: (_) {
-                  return controller.listEnergyMeasurementsState.when(
-                      initial: () => Container(),
-                      loading: () => LoadingWidget(),
-                      success: (energyMeasurements) => MeasurementLineChart(energyMeasurements: energyMeasurements!),
-                      error: (failure) => Center(
-                          child: Text("Não foi possível consultar as medições.", style: TextStyle(fontSize: 16.0),)
-                      )
-                  );
-                },
-              ),
-            )
-          ],
-        );
-      }
+  Widget buildHeaderBodyPage(Widget header, Widget body) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        header,
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: body,
+        )
+      ],
+    );
+  }
 }

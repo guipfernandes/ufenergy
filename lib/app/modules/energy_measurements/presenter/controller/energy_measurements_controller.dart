@@ -27,8 +27,8 @@ abstract class EnergyMeasurementsControllerBase with Store {
     final result = await getEnergyMeasurementsUsecase(
         EnergyMeasurementsParams(
             energyMeter: energyMeterValue,
-            startDate: parseDateTime(dateStartController.text, DATE_TIME_FORMAT_TEXT_FIELD),
-            endDate: parseDateTime(dateEndController.text, DATE_TIME_FORMAT_TEXT_FIELD)
+            startDate: dateStartFilter,
+            endDate: dateEndFilter
         )
     );
     return result.fold((error) => setListEnergyMeasurementsState(ErrorState(error)),
@@ -43,11 +43,15 @@ abstract class EnergyMeasurementsControllerBase with Store {
     return true;
   }
 
-  getEnergyMeters() async {
+  Future<List<String>?> getEnergyMeters() async {
     setListEnergyMetersState(LoadingState());
     final result = await getEnergyMetersUsecase(NoParams());
-    result.fold((error) => setListEnergyMetersState(ErrorState(error)),
-        (result) => setListEnergyMetersState(SuccessState<List<String>>(result.map((e) => e.name).toSet().toList())));
+    List<String> energyMeters = [];
+    result.fold((error) => setListEnergyMetersState(ErrorState(error)), (result) {
+      energyMeters = result.map((e) => e.name).toSet().toList();
+      setListEnergyMetersState(SuccessState<List<String>>(energyMeters));
+    });
+    return energyMeters;
   }
 
   @observable
@@ -61,9 +65,12 @@ abstract class EnergyMeasurementsControllerBase with Store {
   setListEnergyMetersState(ControlState<List<String>> value) => listEnergyMetersState = value;
 
   @observable
-  String energyMeterValue = 'AGRONOMIA';
+  String energyMeterValue = '';
 
   final dateStartController = TextEditingController();
   final dateEndController = TextEditingController();
+
+  DateTime get dateStartFilter => parseDateTime(dateStartController.text, DATE_TIME_FORMAT_TEXT_FIELD);
+  DateTime get dateEndFilter => parseDateTime(dateEndController.text, DATE_TIME_FORMAT_TEXT_FIELD);
 
 }

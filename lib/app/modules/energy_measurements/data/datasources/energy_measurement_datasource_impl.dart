@@ -22,7 +22,7 @@ class EnergyMeasurementDatasourceImpl implements IEnergyMeasurementDatasource {
       this.dio.options.headers["Authorization"] = "Bearer ${payload.token}"; // TODO: Criar interceptor quando criar tela de login
 
 
-      final result = await RestClient(this.dio).getEnergyMeasurements(energyMeter, startDate.toIso8601String(), endDate.toIso8601String());
+      final result = await RestClient(this.dio).getEnergyMeasurements(energyMeter, startDate.toUtc().toIso8601String(), endDate.toUtc().toIso8601String());
       if (result.response.statusCode == 200) {
         return result.data;
       } else {

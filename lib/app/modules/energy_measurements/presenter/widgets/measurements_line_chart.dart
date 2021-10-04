@@ -1,9 +1,9 @@
-import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:ufenergy/app/core/utils/double_utils.dart';
+import 'package:intl/intl.dart';
 import 'package:ufenergy/app/modules/energy_measurements/domain/entities/energy_measurement_entity.dart';
 import 'package:ufenergy/app/modules/energy_measurements/presenter/controller/energy_measurements_controller.dart';
 
@@ -16,36 +16,67 @@ class MeasurementLineChart extends StatefulWidget {
   _MeasurementLineChartState createState() => _MeasurementLineChartState();
 }
 
-class _MeasurementLineChartState extends ModularState<MeasurementLineChart, EnergyMeasurementsController> {
-  List<Color> gradientColors = [
+class _MeasurementLineChartState extends State<MeasurementLineChart> {
+  final controller = Modular.get<EnergyMeasurementsController>();
+
+  double minX = 0;
+  double maxX = 0;
+  double minY = 0;
+  double maxY = 0;
+  double leftTitlesInterval = 0;
+  double bottomTitlesInterval = 0;
+
+  final int divider = 25;
+  final int leftLabelsCount = 6;
+
+  List<FlSpot> spots = const [];
+
+  final List<Color> gradientColors = [
     const Color(0xFF6AB4F7),
     const Color(0xff02d39a),
   ];
 
-  late double maxActivePower;
-
   @override
   void initState() {
     super.initState();
-    maxActivePower = getMaxActivePower();
+    _prepareData();
   }
 
-  double getMaxActivePower() {
-    List<double> activePowers = widget.energyMeasurements.map((e) => e.activePower).toList();
-    return activePowers.length > 0 ? activePowers.reduce(max) : 5;
-  }
+  void _prepareData() async {
+    if (widget.energyMeasurements.isNotEmpty) {
+      double _minY = double.maxFinite;
+      double _maxY = double.minPositive;
 
-  double getMaxChartY() {
-    return (maxActivePower * 1.4).roundToNextEndingWithZero();
-  }
+      spots = widget.energyMeasurements.map((energyMeter) {
+        if (_minY > energyMeter.activePower) _minY = energyMeter.activePower;
+        if (_maxY < energyMeter.activePower) _maxY = energyMeter.activePower;
+        return FlSpot(
+          energyMeter.date.millisecondsSinceEpoch.toDouble(),
+          double.parse(energyMeter.activePower.toStringAsFixed(2)),
+        );
+      }).toList();
 
-  double getMaxChartX() {
-    return widget.energyMeasurements.length.toDouble();
+      minX = controller.dateStartFilter.millisecondsSinceEpoch.toDouble();
+      maxX = controller.dateEndFilter.millisecondsSinceEpoch.toDouble();
+      minY = (_minY / divider).floorToDouble() * divider;
+      maxY = (_maxY / divider).ceilToDouble() * divider;
+      leftTitlesInterval = ((maxY - minY) / (leftLabelsCount - 1)).floorToDouble();
+
+      int diffDays = controller.dateEndFilter.difference(controller.dateStartFilter).inDays;
+      bottomTitlesInterval =  ((maxX - minX) / (diffDays > leftLabelsCount ? (leftLabelsCount - 1) : diffDays.toDouble())).floorToDouble();
+
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return LineChart(measurementLineChartData());
+    return widget.energyMeasurements.isNotEmpty
+        ? LineChart(measurementLineChartData())
+        : Center(
+            child: Text(
+            "Nenhuma medição foi encontrada.",
+            style: TextStyle(fontSize: 16.0),
+          ));
   }
 
   LineChartData measurementLineChartData() {
@@ -53,11 +84,13 @@ class _MeasurementLineChartState extends ModularState<MeasurementLineChart, Ener
       gridData: buildGridData(),
       titlesData: buildTitlesData(),
       borderData: buildBorderData(),
-      minX: 0,
-      maxX: getMaxChartX(),
-      minY: 0,
-      maxY: getMaxChartY(),
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      clipData: FlClipData.all(),
       lineBarsData: buildLinesBarData(),
+      lineTouchData: buildLineTouchData(),
     );
   }
 
@@ -90,7 +123,7 @@ class _MeasurementLineChartState extends ModularState<MeasurementLineChart, Ener
   FlTitlesData? buildTitlesData() {
     return FlTitlesData(
       show: true,
-      rightTitles: SideTitles(showTitles: false),
+      rightTitles: SideTitles(showTitles: true, getTitles: (value) => ""),
       topTitles: SideTitles(showTitles: false),
       bottomTitles: buildBottomTitles(),
       leftTitles: buildLeftTitles(),
@@ -98,38 +131,29 @@ class _MeasurementLineChartState extends ModularState<MeasurementLineChart, Ener
   }
 
   SideTitles? buildBottomTitles() {
-    double interval = getMaxChartX() / 10;
     return SideTitles(
       showTitles: true,
       reservedSize: 22,
-      interval: interval == 0 ? 1 : interval,
-      getTextStyles: (context, value) => const TextStyle(color: Color(0xff68737d), fontWeight: FontWeight.bold, fontSize: 16),
+      interval: bottomTitlesInterval == 0 ? 1 : bottomTitlesInterval,
+      getTextStyles: (context, value) => const TextStyle(color: Color(0xff68737d), fontWeight: FontWeight.bold, fontSize: 12),
       getTitles: (value) {
-        if (value == 0) return "${widget.energyMeasurements[0].date.hour} h";
-        if (value == getMaxChartX() / 2) return "${widget.energyMeasurements[widget.energyMeasurements.length ~/ 2].date.hour} h";
-        if (value.toInt() == getMaxChartX().toInt()) return "${widget.energyMeasurements[widget.energyMeasurements.length - 1].date.hour} h";
-        return '';
+        final DateTime date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+        return DateFormat.MMMd('pt').format(date);
       },
       margin: 8,
     );
   }
 
   SideTitles? buildLeftTitles() {
-    double interval = getMaxChartY() / 10;
     return SideTitles(
       showTitles: true,
-      interval: interval == 0 ? 1 : interval,
+      interval: leftTitlesInterval == 0 ? 1 : leftTitlesInterval,
       getTextStyles: (context, value) => const TextStyle(
         color: Color(0xff67727d),
         fontWeight: FontWeight.bold,
         fontSize: 15,
       ),
-      getTitles: (value) {
-        if (value == 0) return "0 kW";
-        if (value == getMaxChartY() / 2) return "${getMaxChartY() ~/ 2} kW";
-        if (value.toInt() == getMaxChartY().toInt()) return "${getMaxChartY().toInt()} kW";
-        return '';
-      },
+      getTitles: (value) => "${value.toInt()} kW",
       reservedSize: 45,
       margin: 10,
     );
@@ -138,7 +162,7 @@ class _MeasurementLineChartState extends ModularState<MeasurementLineChart, Ener
   List<LineChartBarData>? buildLinesBarData() {
     return [
       LineChartBarData(
-        spots: buildChartSpots(),
+        spots: spots,
         isCurved: false,
         colors: gradientColors,
         barWidth: 4,
@@ -154,12 +178,33 @@ class _MeasurementLineChartState extends ModularState<MeasurementLineChart, Ener
     ];
   }
 
-  List<FlSpot>? buildChartSpots() {
-    List<FlSpot> spots = [];
-    for (int i = 0; i < widget.energyMeasurements.length; i++) {
-      EnergyMeasurementEntity measurement = widget.energyMeasurements[i];
-      spots.add(FlSpot(i.toDouble(), double.parse(measurement.activePower.toStringAsFixed(2))));
-    }
-    return spots;
+  LineTouchData? buildLineTouchData() {
+    return LineTouchData(
+      touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.blueGrey.shade600,
+          maxContentWidth: 200,
+          getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+            return touchedBarSpots.map((flSpot) {
+              return LineTooltipItem(
+                "Potência Ativa: ${flSpot.y.toString()} kW\n",
+                const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                children: [
+                  TextSpan(
+                    text: "${DateFormat.yMd('pt').add_Hm().format(DateTime.fromMillisecondsSinceEpoch(flSpot.x.toInt()))}",
+                    style: TextStyle(
+                      color: Colors.grey[100],
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  )
+                ],
+              );
+            }).toList();
+          }),
+    );
   }
 }

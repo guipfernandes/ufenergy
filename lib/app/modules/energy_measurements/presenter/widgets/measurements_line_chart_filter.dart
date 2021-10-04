@@ -52,20 +52,20 @@ class _MeasurementsLineChartFilterState extends ModularState<MeasurementsLineCha
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: dateField(controller.dateStartController, "Inicio"),
+            child: dateField(controller.dateStartController, "Inicio", initialDate: controller.dateStartFilter),
           ),
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: dateField(controller.dateEndController, "Fim"),
+            child: dateField(controller.dateEndController, "Fim", initialDate: controller.dateEndFilter),
           ),
         ),
       ],
     );
   }
 
-  Widget dateField(TextEditingController textController, String label) {
+  Widget dateField(TextEditingController textController, String label, {DateTime? initialDate}) {
     return TextFieldWidget(
       label: label,
       prefixIcon: Icon(
@@ -77,7 +77,7 @@ class _MeasurementsLineChartFilterState extends ModularState<MeasurementsLineCha
       enableInteractiveSelection: false,
       onTap: () async {
         FocusScope.of(context).requestFocus(FocusNode());
-        final date = await showDateDialog(context, initialDate: DateTime.now());
+        final date = await showDateDialog(context, initialDate: initialDate ?? DateTime.now());
         if (date != null) {
           final time = await showTimePicker(context: context,initialTime: TimeOfDay.fromDateTime(DateTime.now()));
           textController.text = formatDateTime(dateTimeCombine(date, time), "dd/MM/yyyy HH:mm");
