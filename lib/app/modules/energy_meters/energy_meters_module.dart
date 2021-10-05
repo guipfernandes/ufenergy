@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ufenergy/app/modules/energy_meters/data/datasources/energy_meter_datasource_impl.dart';
 import 'package:ufenergy/app/modules/energy_meters/data/repositories/energy_meter_repository_impl.dart';
@@ -18,7 +17,6 @@ class EnergyMetersModule extends Module {
     Bind.lazySingleton((i) => UpdateEnergyMeterLocalizationUsecase(i())),
     Bind.lazySingleton((i) => EnergyMeterRepositoryImpl(i())),
     Bind.lazySingleton((i) => EnergyMeterDatasourceImpl(i())),
-    Bind.lazySingleton((i) => Dio()),
   ];
 
   @override

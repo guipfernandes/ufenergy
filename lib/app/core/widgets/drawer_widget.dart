@@ -27,39 +27,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.zero,
           children: <Widget>[
-            Container(
-              color: Colors.black87,
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(bottom: 8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(AssetIcons.logo, height: 50,),
-                  SizedBox(width: 16,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Text("Guilherme P. Fernandes",
-                          style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white70),
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Text("guilhermepinto@discente.ufg.br",
-                          style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white70),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            buildMenuHeader(),
             buildMenuOption("Medidores", icon: AssetIcons.electric_meter_menu, routeName: EnergyMetersModule.routeName),
-            buildMenuOption("Medições", icon: AssetIcons.electric_meter_menu, routeName: EnergyMeasurementsModule.routeName),
+            buildMenuOption("Medições", icon: AssetIcons.chart_line, routeName: EnergyMeasurementsModule.routeName),
             buildMenuOption("Mapa", icon: AssetIcons.map_marked, routeName: EnergyMetersModule.routeName + MapsPage.routeName),
           ],
         ),
@@ -67,7 +37,41 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 
-  buildMenuOption(String title, {String? icon, String? routeName}) {
+  Widget buildMenuHeader() {
+    return Container(
+      color: Colors.black87,
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(AssetIcons.logo, height: 50,),
+          SizedBox(width: 16,),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Text("Guilherme P. Fernandes",
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white70),
+                ),
+              ),
+              SizedBox(height: 5,),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Text("guilhermepinto@discente.ufg.br",
+                  style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white70),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildMenuOption(String title, {String? icon, String? routeName}) {
     final currentPath = isCurrentPath(routeName);
     return Column(
       children: [

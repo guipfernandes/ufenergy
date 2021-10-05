@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'core/theme/theme_data.dart';
-import 'modules/energy_meters/energy_meters_module.dart';
+import 'modules/login/login_module.dart';
 
 class AppWidget extends StatelessWidget {
   @override
@@ -21,7 +21,7 @@ class AppWidget extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate
       ],
-      initialRoute: EnergyMetersModule.routeName,
+      initialRoute: LoginModule.routeName,
     ).modular();
   }
 }
