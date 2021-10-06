@@ -25,7 +25,10 @@ class UserDatasourceImpl implements IUserDatasource {
       }
     } on DioError catch(e) {
       print(e);
-      throw ServerException(e.message);
+      if (e.response?.statusCode == 401) {
+        throw ServerException("Usuário ou senha inválidos");
+      }
+      throw ServerException();
     } catch(e) {
       print(e);
       throw ServerException();

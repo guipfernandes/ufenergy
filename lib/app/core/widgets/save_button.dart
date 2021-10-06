@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'loading_widget.dart';
+import 'loading_button.dart';
 
 class SaveButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -23,22 +23,19 @@ class SaveButton extends StatefulWidget {
 class _SaveButtonState extends State<SaveButton> {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        child: widget.loading
-            ? LoadingWidget(color: Colors.white, strokeWidth: 2.0, size: 20)
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Icon(Icons.check),
-                  SizedBox(width: 8),
-                  Text("Salvar")
-                ],
-              ),
-        style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: widget.borderRadius), fixedSize: widget.size),
-        onPressed: () {
-          if (!widget.loading) widget.onPressed();
-        }
+    return LoadingButton(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.check),
+            SizedBox(width: 8),
+            Text("Salvar")
+          ],
+        ),
+        loading: widget.loading,
+        size: widget.size,
+        borderRadius: widget.borderRadius,
+        onPressed: widget.onPressed
     );
   }
 }

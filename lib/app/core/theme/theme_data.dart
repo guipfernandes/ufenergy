@@ -13,6 +13,10 @@ ThemeData lightThemeData() {
   );
 
   final TextTheme textTheme = TextTheme(
+    headline4: GoogleFonts.josefinSans(
+        color: primaryColor,
+        fontSize: 28.0,
+    ),
     headline6: GoogleFonts.josefinSans(
       color: primaryColor,
       fontSize: 22.0,

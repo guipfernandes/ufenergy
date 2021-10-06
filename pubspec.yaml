@@ -63,6 +63,9 @@ dependencies:
   # Storage
   shared_preferences: ^2.0.8
 
+  # Custom Shapes
+  flutter_custom_clippers: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

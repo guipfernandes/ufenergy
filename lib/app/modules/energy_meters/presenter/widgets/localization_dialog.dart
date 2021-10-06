@@ -153,7 +153,7 @@ class _LocalizationDialogState extends State<LocalizationDialog> {
       child: Observer(
         builder: (_) {
           return SaveButton(
-            loading: controller.updateLocalizationState is LoadingState ? true : false,
+            loading: controller.updateLocalizationState is LoadingState,
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 controller.updateEnergyMeterLocalization(widget.energyMeter);

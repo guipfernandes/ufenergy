@@ -5,6 +5,7 @@ import 'package:ufenergy/app/core/utils/asset_icons.dart';
 import 'package:ufenergy/app/modules/energy_measurements/energy_measurements_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/energy_meters_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
+import 'package:ufenergy/app/modules/login/login_module.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -23,14 +24,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Drawer(
-        child: ListView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.zero,
+        child: Column(
           children: <Widget>[
             buildMenuHeader(),
             buildMenuOption("Medidores", icon: AssetIcons.electric_meter_menu, routeName: EnergyMetersModule.routeName),
             buildMenuOption("Medições", icon: AssetIcons.chart_line, routeName: EnergyMeasurementsModule.routeName),
             buildMenuOption("Mapa", icon: AssetIcons.map_marked, routeName: EnergyMetersModule.routeName + MapsPage.routeName),
+            Spacer(),
+            buildMenuOption("Sair", icon: AssetIcons.logout, routeName: LoginModule.routeName, showDividerOnTop: true, removeUntil: true),
           ],
         ),
       ),
@@ -71,10 +72,17 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 
-  Widget buildMenuOption(String title, {String? icon, String? routeName}) {
+  Widget buildMenuOption(String title, {String? icon, String? routeName, bool showDividerOnTop = false, bool removeUntil = false}) {
     final currentPath = isCurrentPath(routeName);
     return Column(
       children: [
+        if (showDividerOnTop) Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Divider(
+            thickness: 0.15,
+            color: Colors.grey,
+          ),
+        ),
         ListTile(
           title: Text(title,
             style: TextStyle(color: currentPath ? Theme.of(context).colorScheme.primaryVariant : Colors.grey, fontSize: 16),
@@ -88,12 +96,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 Modular.to.pop(context);
               } else {
                 Scaffold.of(context).openEndDrawer();
-                Modular.to.pushNamed(routeName);
+                removeUntil ? Modular.to.navigate(routeName) : Modular.to.pushNamed(routeName);
               }
             }
           },
         ),
-        Padding(
+        if (!showDividerOnTop) Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Divider(
             thickness: 0.15,

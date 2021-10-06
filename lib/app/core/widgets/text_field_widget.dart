@@ -22,6 +22,9 @@ class TextFieldWidget extends StatelessWidget {
   final TextCapitalization? textCapitalization;
   final String? helperText;
   final EdgeInsetsGeometry? contentPadding;
+  final bool obscureText;
+  final bool enableSuggestions;
+  final bool autocorrect;
 
   TextFieldWidget(
       {required this.label,
@@ -43,7 +46,10 @@ class TextFieldWidget extends StatelessWidget {
         this.textCapitalization,
         this.validator,
         this.helperText,
-        this.contentPadding}
+        this.contentPadding,
+        this.obscureText = false,
+        this.enableSuggestions = true,
+        this.autocorrect = true}
       );
 
   @override
@@ -67,6 +73,9 @@ class TextFieldWidget extends StatelessWidget {
             !textInputType!.decimal!
             ? [FilteringTextInputFormatter.digitsOnly]
             : [],
+        obscureText: obscureText,
+        enableSuggestions: enableSuggestions,
+        autocorrect: autocorrect,
         decoration: InputDecoration(
             labelText: label,
             contentPadding: contentPadding,
