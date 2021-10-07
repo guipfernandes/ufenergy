@@ -16,7 +16,7 @@ class Prefs {
     return _sharedPreferences!;
   }
 
-  Future get<Type>(String key) async {
+  Future<dynamic> get<Type>(String key) async {
     var instance = await getInstance();
     if (Type == bool) {
       return instance.getBool(key);
@@ -26,6 +26,8 @@ class Prefs {
       return instance.getInt(key);
     } else if (Type == double) {
       return instance.getDouble(key);
+    } else {
+      return instance.getString(key);
     }
   }
 

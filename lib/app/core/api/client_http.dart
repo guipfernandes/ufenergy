@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ufenergy/app/core/config/config.dart';
 import 'package:ufenergy/app/core/storage/prefs.dart';
 import 'package:ufenergy/app/modules/login/login_module.dart';
 
@@ -12,7 +13,7 @@ class ClientHttp extends DioForNative {
   static const String BEARER = "Bearer";
 
   ClientHttp() {
-    options.baseUrl = "http://192.168.1.9:9000/api/v1/";
+    options.baseUrl = Config.apiUrl;
     options.connectTimeout = CONNECT_TIMEOUT;
     options.sendTimeout = SEND_TIMEOUT;
     options.receiveTimeout = RECEIVE_TIMEOUT;
@@ -23,7 +24,7 @@ class ClientHttp extends DioForNative {
   Future<void> requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) async {
     String? token = await Prefs().get<String>(Prefs.JWT_TOKEN);
     if (token != null) {
-      super.options.headers[AUTHORIZATION] = "$BEARER $token";
+      options.headers[AUTHORIZATION] = "$BEARER $token";
     }
     return handler.next(options);
   }

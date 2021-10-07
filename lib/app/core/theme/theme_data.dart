@@ -10,6 +10,7 @@ ThemeData lightThemeData() {
     primaryVariant: Color(0xFF0E8BCE),
     secondary: secondaryColor,
     secondaryVariant: Color(0xFFEEC233),
+    background: Color(0xFF121212)
   );
 
   final TextTheme textTheme = TextTheme(

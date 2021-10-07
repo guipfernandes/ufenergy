@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ufenergy/app/core/storage/prefs.dart';
 import 'package:ufenergy/app/core/utils/asset_icons.dart';
 import 'package:ufenergy/app/modules/energy_measurements/energy_measurements_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/energy_meters_module.dart';
@@ -31,7 +32,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             buildMenuOption("Medições", icon: AssetIcons.chart_line, routeName: EnergyMeasurementsModule.routeName),
             buildMenuOption("Mapa", icon: AssetIcons.map_marked, routeName: EnergyMetersModule.routeName + MapsPage.routeName),
             Spacer(),
-            buildMenuOption("Sair", icon: AssetIcons.logout, routeName: LoginModule.routeName, showDividerOnTop: true, removeUntil: true),
+            buildMenuOption("Sair",
+                icon: AssetIcons.logout,
+                showDividerOnTop: true,
+                onTap: () async {
+                  await Prefs().set(Prefs.JWT_TOKEN, "");
+                  Modular.to.navigate(LoginModule.routeName);
+                }
+            ),
           ],
         ),
       ),
@@ -40,7 +48,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   Widget buildMenuHeader() {
     return Container(
-      color: Colors.black87,
+      color: Theme.of(context).colorScheme.background,
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 8.0),
       child: Row(
@@ -72,7 +80,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 
-  Widget buildMenuOption(String title, {String? icon, String? routeName, bool showDividerOnTop = false, bool removeUntil = false}) {
+  Widget buildMenuOption(String title, {String? icon, String? routeName, VoidCallback? onTap, bool showDividerOnTop = false}) {
     final currentPath = isCurrentPath(routeName);
     return Column(
       children: [
@@ -96,8 +104,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 Modular.to.pop(context);
               } else {
                 Scaffold.of(context).openEndDrawer();
-                removeUntil ? Modular.to.navigate(routeName) : Modular.to.pushNamed(routeName);
+                Modular.to.pushNamed(routeName);
               }
+            } else if (onTap != null) {
+              Scaffold.of(context).openEndDrawer();
+              onTap();
             }
           },
         ),

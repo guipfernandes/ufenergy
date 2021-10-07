@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ufenergy/app/core/api/client_http.dart';
 import 'package:ufenergy/app/core/storage/prefs.dart';
 
 import 'data/datasources/user_datasource_impl.dart';
@@ -17,7 +17,7 @@ class LoginModule extends Module {
     Bind.lazySingleton((i) => LoginUsecase(i())),
     Bind.lazySingleton((i) => UserRepositoryImpl(i())),
     Bind.lazySingleton((i) => UserDatasourceImpl(i(), i())),
-    Bind.lazySingleton((i) => Dio()),
+    Bind.lazySingleton((i) => ClientHttp()),
     Bind.lazySingleton((i) => Prefs()),
   ];
 

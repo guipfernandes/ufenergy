@@ -66,6 +66,9 @@ dependencies:
   # Custom Shapes
   flutter_custom_clippers: ^2.0.0
 
+  # Environment
+  flutter_dotenv: ^5.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -83,6 +86,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icons/
+    - .env
   uses-material-design: true
 
 vars:

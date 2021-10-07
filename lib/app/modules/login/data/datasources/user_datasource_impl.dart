@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:ufenergy/app/core/api/client_http.dart';
 import 'package:ufenergy/app/core/storage/prefs.dart';
 import 'package:ufenergy/app/core/usecase/errors/exceptions.dart';
 import 'package:ufenergy/app/modules/login/data/models/login_model.dart';
@@ -9,7 +10,7 @@ import 'user_datasource.dart';
 part 'user_datasource_impl.g.dart';
 
 class UserDatasourceImpl implements IUserDatasource {
-  final Dio dio;
+  final ClientHttp dio;
   final Prefs prefs;
 
   UserDatasourceImpl(this.dio, this.prefs);

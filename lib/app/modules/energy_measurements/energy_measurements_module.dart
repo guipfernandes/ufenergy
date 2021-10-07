@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ufenergy/app/core/api/client_http.dart';
 import 'package:ufenergy/app/modules/energy_measurements/data/datasources/energy_measurement_datasource_impl.dart';
 import 'package:ufenergy/app/modules/energy_measurements/data/repositories/energy_measurement_repository_impl.dart';
 import 'package:ufenergy/app/modules/energy_measurements/domain/usecases/get_energy_measurements_usecase.dart';
@@ -17,7 +17,7 @@ class EnergyMeasurementsModule extends Module {
     Bind.lazySingleton((i) => GetEnergyMetersUsecase(i())),
     Bind.lazySingleton((i) => EnergyMeasurementRepositoryImpl(i())),
     Bind.lazySingleton((i) => EnergyMeasurementDatasourceImpl(i())),
-    Bind.lazySingleton((i) => Dio()),
+    Bind.lazySingleton((i) => ClientHttp()),
   ];
 
   @override
