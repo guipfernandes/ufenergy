@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs {
@@ -5,7 +7,8 @@ class Prefs {
   factory Prefs() => _instance;
   Prefs.internal();
 
-  static const JWT_TOKEN = 'Authorization';
+  static const JWT_TOKEN = 'authorization';
+  static const USER = 'user';
 
   static SharedPreferences? _sharedPreferences;
 
@@ -26,6 +29,10 @@ class Prefs {
       return instance.getInt(key);
     } else if (Type == double) {
       return instance.getDouble(key);
+    } else if (Type == List) {
+      return instance.getStringList(key);
+    } else if (Type == Object) {
+      return jsonDecode(instance.getString(key)!);
     } else {
       return instance.getString(key);
     }
@@ -41,7 +48,16 @@ class Prefs {
       return instance.setInt(key, value);
     } else if (value is double) {
       return instance.setDouble(key, value);
+    } else if (value is List<String>) {
+      return instance.setStringList(key, value);
+    } else if (value is Map) {
+      return instance.setString(key, jsonEncode(value));
     }
     return false;
+  }
+
+  Future<bool> remove(String key) async {
+    var instance = await getInstance();
+    return instance.remove(key);
   }
 }

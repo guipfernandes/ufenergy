@@ -53,11 +53,11 @@ class EnergyMeterDatasourceImpl implements IEnergyMeterDatasource {
 
 @RestApi()
 abstract class RestClient {
-  factory RestClient(Dio dio) = _RestClient;
+  factory RestClient(Dio dio) => _RestClient(dio, baseUrl: dio.options.baseUrl + '/api/v1');
 
   @GET("/medidor")
   Future<HttpResponse<List<EnergyMeterModel>>> getEnergyMeters();
 
-  @PUT("medidor/localizacao")
+  @PUT("/medidor/localizacao")
   Future<HttpResponse<void>> updateMeterLocalization(@Body() EnergyMeterLocalizationModel energyMeterLocalization);
 }

@@ -138,11 +138,11 @@ class _LocalizationDialogState extends State<LocalizationDialog> {
     if (!isEmpty(controller.latitudeController.text) && !isEmpty(controller.longituteController.text)) {
       energyMeterPosition = LatLng(double.parse(controller.latitudeController.text), double.parse(controller.longituteController.text));
     }
-    LatLng? selectedPosition = await Modular.to.pushNamed<LatLng>(Modular.to.modulePath + MapsPage.routeName,
+    var selectedPosition = await Modular.to.pushNamed(Modular.to.modulePath + MapsPage.routeName,
         arguments: MapsPageArgs(selectMode: true, energyMeterPosition: energyMeterPosition));
 
     if (selectedPosition != null) {
-      controller.latitudeController.text = "${selectedPosition.latitude}";
+      controller.latitudeController.text = "${(selectedPosition as LatLng).latitude}";
       controller.longituteController.text = "${selectedPosition.longitude}";
     }
   }

@@ -14,13 +14,8 @@ class EnergyMetersPage extends StatefulWidget {
   _EnergyMetersPageState createState() => _EnergyMetersPageState();
 }
 
-class _EnergyMetersPageState extends ModularState<EnergyMetersPage, EnergyMetersController> {
-
-  @override
-  void initState() {
-    super.initState();
-    controller.getEnergyMeters();
-  }
+class _EnergyMetersPageState extends State<EnergyMetersPage> {
+  final controller = Modular.get<EnergyMetersController>();
 
   @override
   Widget build(BuildContext context) {

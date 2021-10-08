@@ -41,7 +41,7 @@ class _RestClient implements RestClient {
     _data.addAll(energyMeterLocalization.toJson());
     final _result = await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(
         Options(method: 'PUT', headers: <String, dynamic>{}, extra: _extra)
-            .compose(_dio.options, 'medidor/localizacao',
+            .compose(_dio.options, '/medidor/localizacao',
                 queryParameters: queryParameters, data: _data)
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final httpResponse = HttpResponse(null, _result);

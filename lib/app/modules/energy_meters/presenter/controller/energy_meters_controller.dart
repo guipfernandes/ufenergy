@@ -17,7 +17,9 @@ abstract class EnergyMetersControllerBase with Store {
   final GetEnergyMetersUsecase getEnergyMetersUsecase;
   final UpdateEnergyMeterLocalizationUsecase updateEnergyMeterLocalizationUsecase;
 
-  EnergyMetersControllerBase(this.getEnergyMetersUsecase, this.updateEnergyMeterLocalizationUsecase) : super();
+  EnergyMetersControllerBase(this.getEnergyMetersUsecase, this.updateEnergyMeterLocalizationUsecase) : super() {
+    getEnergyMeters();
+  }
 
   getEnergyMeters() async {
     setListEnergyMetersState(LoadingState());
@@ -36,17 +38,15 @@ abstract class EnergyMetersControllerBase with Store {
         longitude: double.parse(longituteController.text.replaceAll(",", "."))
     );
     final result = await updateEnergyMeterLocalizationUsecase(energyMeterUpdated);
-    return result.fold(
-        (error) {
-          setUpdateLocalizationState(ErrorState(error));
-          showToast("Não foi possível salvar os dados");
-        },
-        (result) {
-          setUpdateLocalizationState(SuccessState(null));
-          showToast("Localização salva com sucesso!");
-          Modular.to.pop();
-          getEnergyMeters();
-        });
+    return result.fold((error) {
+      setUpdateLocalizationState(ErrorState(error));
+      showToast("Não foi possível salvar os dados");
+    }, (result) {
+      setUpdateLocalizationState(SuccessState(null));
+      showToast("Localização salva com sucesso!");
+      Modular.to.pop();
+      getEnergyMeters();
+    });
   }
 
   @observable

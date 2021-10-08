@@ -19,7 +19,19 @@ abstract class EnergyMeasurementsControllerBase with Store {
   final GetEnergyMeasurementsUsecase getEnergyMeasurementsUsecase;
   final GetEnergyMetersUsecase getEnergyMetersUsecase;
 
-  EnergyMeasurementsControllerBase(this.getEnergyMeasurementsUsecase, this.getEnergyMetersUsecase) : super();
+  EnergyMeasurementsControllerBase(this.getEnergyMeasurementsUsecase, this.getEnergyMetersUsecase) : super() {
+    pipeline();
+  }
+
+  pipeline() {
+    getEnergyMeters().then((energyMeters) {
+      DateTime now = DateTime.now();
+      energyMeterValue = energyMeters != null && energyMeters.isNotEmpty ? energyMeters.first : "";
+      dateStartController.text = formatDateTime(now.subtract(Duration(days: 10)), DATE_TIME_FORMAT_TEXT_FIELD);
+      dateEndController.text = formatDateTime(now, DATE_TIME_FORMAT_TEXT_FIELD);
+      getEnergyMeasurements();
+    });
+  }
 
   getEnergyMeasurements() async {
     if (!validateSearch()) return;

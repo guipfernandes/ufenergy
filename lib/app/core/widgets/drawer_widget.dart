@@ -1,11 +1,14 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ufenergy/app/core/storage/prefs.dart';
 import 'package:ufenergy/app/core/utils/asset_icons.dart';
+import 'package:ufenergy/app/core/widgets/loading_widget.dart';
 import 'package:ufenergy/app/modules/energy_measurements/energy_measurements_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/energy_meters_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
+import 'package:ufenergy/app/modules/login/data/models/user_model.dart';
 import 'package:ufenergy/app/modules/login/login_module.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -36,7 +39,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 icon: AssetIcons.logout,
                 showDividerOnTop: true,
                 onTap: () async {
-                  await Prefs().set(Prefs.JWT_TOKEN, "");
+                  await Prefs().remove(Prefs.JWT_TOKEN);
+                  await Prefs().remove(Prefs.USER);
                   Modular.to.navigate(LoginModule.routeName);
                 }
             ),
@@ -56,24 +60,32 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         children: [
           Image.asset(AssetIcons.logo, height: 50,),
           SizedBox(width: 16,),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Text("Guilherme P. Fernandes",
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white70),
-                ),
-              ),
-              SizedBox(height: 5,),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: Text("guilhermepinto@discente.ufg.br",
-                  style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white70),
-                ),
-              ),
-            ],
+          FutureBuilder<UserModel>(
+            future: Prefs().get<Object>(Prefs.USER).then((value) => UserModel.fromJson(value)),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) return LoadingWidget();
+              if (!snapshot.hasData) return Container();
+              UserModel user = snapshot.data!;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(user.name,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.white70),
+                    ),
+                  ),
+                  SizedBox(height: 5,),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(user.email,
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white70),
+                    ),
+                  ),
+                ],
+              );
+            }
           )
         ],
       ),

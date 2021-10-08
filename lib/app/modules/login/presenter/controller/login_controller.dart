@@ -19,7 +19,7 @@ abstract class LoginControllerBase with Store {
 
   Future<void> login() async {
     setLoginState(LoadingState());
-    final result = await loginUsecase(UserEntity(login: emailController.text, password: passwordController.text));
+    final result = await loginUsecase(CredentialsEntity(login: emailController.text, password: passwordController.text));
     return result.fold((error) {
       setLoginState(ErrorState(error));
       handleError(error);

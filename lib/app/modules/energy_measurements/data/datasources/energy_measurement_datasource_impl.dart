@@ -36,7 +36,7 @@ class EnergyMeasurementDatasourceImpl implements IEnergyMeasurementDatasource {
 
 @RestApi()
 abstract class RestClient {
-  factory RestClient(Dio dio) = _RestClient;
+  factory RestClient(Dio dio) => _RestClient(dio, baseUrl: dio.options.baseUrl + '/api/v1');
 
   @GET("/medicao-hora")
   Future<HttpResponse<List<EnergyMeasurementModel>>> getEnergyMeasurements(

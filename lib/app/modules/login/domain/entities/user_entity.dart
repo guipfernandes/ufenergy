@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class UserEntity extends Equatable {
+class CredentialsEntity extends Equatable {
   final String login;
   final String password;
 
-  UserEntity({
+  CredentialsEntity({
     required this.login,
     required this.password
   });

@@ -7,7 +7,7 @@ An application for UFG energy control
 - Android SDK (Installed with Android Studio)
 - Flutter SDK
 
-### Config
+## Configuration
 ```console
 flutter pub get
 ```

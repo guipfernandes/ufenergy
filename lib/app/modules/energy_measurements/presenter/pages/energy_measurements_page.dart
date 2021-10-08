@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:ufenergy/app/core/utils/date_utils.dart';
 import 'package:ufenergy/app/core/widgets/app_bar_widget.dart';
 import 'package:ufenergy/app/core/widgets/drawer_widget.dart';
 import 'package:ufenergy/app/core/widgets/loading_widget.dart';
@@ -17,18 +16,6 @@ class EnergyMeasurementsPage extends StatefulWidget {
 }
 
 class _EnergyMeasurementsPageState extends ModularState<EnergyMeasurementsPage, EnergyMeasurementsController> {
-
-  @override
-  void initState() {
-    super.initState();
-    controller.getEnergyMeters().then((energyMeters) {
-      DateTime now = DateTime.now();
-      controller.energyMeterValue = energyMeters != null && energyMeters.isNotEmpty ? energyMeters.first : "";
-      controller.dateStartController.text = formatDateTime(now.subtract(Duration(days: 10)), DATE_TIME_FORMAT_TEXT_FIELD);
-      controller.dateEndController.text = formatDateTime(now, DATE_TIME_FORMAT_TEXT_FIELD);
-      controller.getEnergyMeasurements();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
