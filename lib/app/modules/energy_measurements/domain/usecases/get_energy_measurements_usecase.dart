@@ -12,22 +12,22 @@ class GetEnergyMeasurementsUsecase implements Usecase<List<EnergyMeasurementEnti
 
   @override
   Future<Either<Failure, List<EnergyMeasurementEntity>>> call(EnergyMeasurementsParams params) async {
-    return repository.getEnergyMeasurements(params.energyMeter, params.startDate, params.endDate);
+    return repository.getEnergyMeasurements(params.energyMeterIds, params.startDate, params.endDate);
   }
 
 }
 
 class EnergyMeasurementsParams extends Equatable {
-  final String energyMeter;
+  final List<int> energyMeterIds;
   final DateTime startDate;
   final DateTime endDate;
 
   EnergyMeasurementsParams({
-    required this.energyMeter,
+    required this.energyMeterIds,
     required this.startDate,
     required this.endDate
   });
 
   @override
-  List<Object> get props => [energyMeter, startDate, endDate];
+  List<Object> get props => [energyMeterIds, startDate, endDate];
 }

@@ -15,10 +15,10 @@ class _RestClient implements RestClient {
 
   @override
   Future<HttpResponse<List<EnergyMeasurementModel>>> getEnergyMeasurements(
-      energyMeterName, measurementStartDate, measurementEndDate) async {
+      energyMeterIds, measurementStartDate, measurementEndDate) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'nomeMedidor': energyMeterName,
+      r'idMedidores': energyMeterIds,
       r'dataMedicaoInicio': measurementStartDate,
       r'dataMedicaoFim': measurementEndDate
     };

@@ -11,9 +11,9 @@ class EnergyMeasurementRepositoryImpl implements IEnergyMeasurementRepository {
   EnergyMeasurementRepositoryImpl(this.datasource);
 
   @override
-  Future<Either<Failure, List<EnergyMeasurementEntity>>> getEnergyMeasurements(String energyMeter, DateTime startDate, DateTime endDate) async {
+  Future<Either<Failure, List<EnergyMeasurementEntity>>> getEnergyMeasurements(List<int> energyMeterIds, DateTime startDate, DateTime endDate) async {
     try {
-      return Right(await datasource.getEnergyMeasurements(energyMeter, startDate, endDate));
+      return Right(await datasource.getEnergyMeasurements(energyMeterIds, startDate, endDate));
     } on ServerException {
       return Left(ServerFailure());
     }

@@ -14,10 +14,10 @@ class EnergyMeasurementDatasourceImpl implements IEnergyMeasurementDatasource {
   EnergyMeasurementDatasourceImpl(this.dio);
 
   @override
-  Future<List<EnergyMeasurementModel>> getEnergyMeasurements(String energyMeter, DateTime startDate, DateTime endDate) async {
+  Future<List<EnergyMeasurementModel>> getEnergyMeasurements(List<int> energyMeterIds, DateTime startDate, DateTime endDate) async {
     try {
       final result = await RestClient(this.dio)
-          .getEnergyMeasurements(energyMeter, startDate.toUtc().toIso8601String(), endDate.toUtc().toIso8601String());
+          .getEnergyMeasurements(energyMeterIds, startDate.toUtc().toIso8601String(), endDate.toUtc().toIso8601String());
       if (result.response.statusCode == 200) {
         return result.data;
       } else {
@@ -40,7 +40,7 @@ abstract class RestClient {
 
   @GET("/medicao-hora")
   Future<HttpResponse<List<EnergyMeasurementModel>>> getEnergyMeasurements(
-      @Query("nomeMedidor") String energyMeterName,
+      @Query("idMedidores") List<int> energyMeterIds,
       @Query("dataMedicaoInicio") String measurementStartDate,
       @Query("dataMedicaoFim") String measurementEndDate
   );

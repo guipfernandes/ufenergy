@@ -5,9 +5,10 @@ import 'package:ufenergy/app/core/utils/date_utils.dart';
 import 'package:ufenergy/app/core/widgets/dialogs/date_dialog.dart';
 import 'package:ufenergy/app/core/widgets/text_field_widget.dart';
 import 'package:ufenergy/app/modules/energy_measurements/presenter/controller/energy_measurements_controller.dart';
+import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_entity.dart';
 
 class MeasurementsLineChartFilter extends StatefulWidget {
-  final List<String>? energyMeters;
+  final List<EnergyMeterEntity>? energyMeters;
 
   const MeasurementsLineChartFilter({Key? key, this.energyMeters}) : super(key: key);
 
@@ -30,12 +31,12 @@ class _MeasurementsLineChartFilterState extends ModularState<MeasurementsLineCha
 
   Widget energyMetersDropdown() {
     return Observer(builder: (_) {
-      return DropdownButton<String>(
+      return DropdownButton<int>(
         value: controller.energyMeterValue,
-        items: widget.energyMeters?.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
+        items: widget.energyMeters?.map((EnergyMeterEntity energyMeter) {
+          return DropdownMenuItem<int>(
+            value: energyMeter.id,
+            child: Text(energyMeter.name),
           );
         }).toList(),
         onChanged: (value) {
@@ -80,7 +81,7 @@ class _MeasurementsLineChartFilterState extends ModularState<MeasurementsLineCha
         final date = await showDateDialog(context, initialDate: initialDate ?? DateTime.now());
         if (date != null) {
           final time = await showTimePicker(context: context,initialTime: TimeOfDay.fromDateTime(DateTime.now()));
-          textController.text = formatDateTime(dateTimeCombine(date, time), "dd/MM/yyyy HH:mm");
+          textController.text = formatDateTime(dateTimeCombine(date, time), DATE_TIME_FORMAT_TEXT_FIELD);
         }
       },
     );

@@ -32,13 +32,13 @@ mixin _$EnergyMeasurementsController
       Atom(name: 'EnergyMeasurementsControllerBase.listEnergyMetersState');
 
   @override
-  ControlState<List<String>> get listEnergyMetersState {
+  ControlState<List<EnergyMeterEntity>> get listEnergyMetersState {
     _$listEnergyMetersStateAtom.reportRead();
     return super.listEnergyMetersState;
   }
 
   @override
-  set listEnergyMetersState(ControlState<List<String>> value) {
+  set listEnergyMetersState(ControlState<List<EnergyMeterEntity>> value) {
     _$listEnergyMetersStateAtom.reportWrite(value, super.listEnergyMetersState,
         () {
       super.listEnergyMetersState = value;
@@ -49,13 +49,13 @@ mixin _$EnergyMeasurementsController
       Atom(name: 'EnergyMeasurementsControllerBase.energyMeterValue');
 
   @override
-  String get energyMeterValue {
+  int? get energyMeterValue {
     _$energyMeterValueAtom.reportRead();
     return super.energyMeterValue;
   }
 
   @override
-  set energyMeterValue(String value) {
+  set energyMeterValue(int? value) {
     _$energyMeterValueAtom.reportWrite(value, super.energyMeterValue, () {
       super.energyMeterValue = value;
     });
@@ -80,7 +80,8 @@ mixin _$EnergyMeasurementsController
   }
 
   @override
-  dynamic setListEnergyMetersState(ControlState<List<String>> value) {
+  dynamic setListEnergyMetersState(
+      ControlState<List<EnergyMeterEntity>> value) {
     final _$actionInfo =
         _$EnergyMeasurementsControllerBaseActionController.startAction(
             name: 'EnergyMeasurementsControllerBase.setListEnergyMetersState');

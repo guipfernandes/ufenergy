@@ -150,7 +150,7 @@ class _MeasurementLineChartState extends State<MeasurementLineChart> {
       getTextStyles: (context, value) => const TextStyle(
         color: Color(0xff67727d),
         fontWeight: FontWeight.bold,
-        fontSize: 15,
+        fontSize: 14,
       ),
       getTitles: (value) => "${value.toInt()} kW",
       reservedSize: 45,

@@ -7,6 +7,7 @@ import 'package:ufenergy/app/core/widgets/loading_widget.dart';
 import 'package:ufenergy/app/modules/energy_measurements/presenter/controller/energy_measurements_controller.dart';
 import 'package:ufenergy/app/modules/energy_measurements/presenter/widgets/measurements_line_chart.dart';
 import 'package:ufenergy/app/modules/energy_measurements/presenter/widgets/measurements_line_chart_filter.dart';
+import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_entity.dart';
 
 class EnergyMeasurementsPage extends StatefulWidget {
   const EnergyMeasurementsPage({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _EnergyMeasurementsPageState extends ModularState<EnergyMeasurementsPage, 
     );
   }
 
-  Widget buildSuccessState(List<String>? energyMeters) {
+  Widget buildSuccessState(List<EnergyMeterEntity>? energyMeters) {
     return buildHeaderBodyPage(
         MeasurementsLineChartFilter(energyMeters: energyMeters),
         Observer(

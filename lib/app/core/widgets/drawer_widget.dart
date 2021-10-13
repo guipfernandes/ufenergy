@@ -1,10 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:ufenergy/app/core/storage/prefs.dart';
 import 'package:ufenergy/app/core/utils/asset_icons.dart';
-import 'package:ufenergy/app/core/widgets/loading_widget.dart';
 import 'package:ufenergy/app/modules/energy_measurements/energy_measurements_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/energy_meters_module.dart';
 import 'package:ufenergy/app/modules/energy_meters/presenter/pages/maps_page.dart';
@@ -63,8 +61,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           FutureBuilder<UserModel>(
             future: Prefs().get<Object>(Prefs.USER).then((value) => UserModel.fromJson(value)),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) return LoadingWidget();
-              if (!snapshot.hasData) return Container();
+              if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) return Container();
               UserModel user = snapshot.data!;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

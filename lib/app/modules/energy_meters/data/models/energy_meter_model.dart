@@ -4,13 +4,13 @@ class EnergyMeterModel extends EnergyMeterEntity {
   EnergyMeterModel({
     required id,
     required name,
-    required model,
-    required type,
-    required address,
-    required latitude,
-    required longitude,
-    required ultimaLeitura,
-    required ultimaSincronizacao
+    model,
+    type,
+    address,
+    latitude,
+    longitude,
+    ultimaLeitura,
+    ultimaSincronizacao
   }) : super(
             id: id,
             name: name,
