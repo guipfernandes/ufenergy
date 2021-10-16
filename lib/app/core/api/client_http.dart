@@ -29,8 +29,10 @@ class ClientHttp extends DioForNative {
     return handler.next(options);
   }
 
-  void errorInterceptor(DioError e, ErrorInterceptorHandler handler) {
+  Future<void> errorInterceptor(DioError e, ErrorInterceptorHandler handler) async {
     if (e.response?.statusCode == 401) {
+      await Prefs().remove(Prefs.JWT_TOKEN);
+      await Prefs().remove(Prefs.USER);
       Modular.to.navigate(LoginModule.routeName);
     }
     return handler.next(e);
