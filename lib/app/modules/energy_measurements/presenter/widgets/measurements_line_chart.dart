@@ -150,9 +150,9 @@ class _MeasurementLineChartState extends State<MeasurementLineChart> {
       getTextStyles: (context, value) => const TextStyle(
         color: Color(0xff67727d),
         fontWeight: FontWeight.bold,
-        fontSize: 14,
+        fontSize: 13,
       ),
-      getTitles: (value) => "${value.toInt()} kW",
+      getTitles: (value) => "${value.toInt()} kWh",
       reservedSize: 45,
       margin: 10,
     );
@@ -185,7 +185,7 @@ class _MeasurementLineChartState extends State<MeasurementLineChart> {
           getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
             return touchedBarSpots.map((flSpot) {
               return LineTooltipItem(
-                "Potência Ativa: ${flSpot.y.toString()} kW\n",
+                "Potência Ativa: ${flSpot.y.toString()} kWh\n",
                 const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
