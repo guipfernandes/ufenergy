@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:ufenergy/app/core/api/client_http.dart';
 import 'package:ufenergy/app/core/usecase/errors/exceptions.dart';
 import 'package:ufenergy/app/modules/energy_meters/data/datasources/energy_meter_datasource.dart';
 import 'package:ufenergy/app/modules/energy_meters/data/datasources/energy_meter_datasource_impl.dart';
@@ -20,11 +21,11 @@ const dioHttpHeadersForResponseBody = {
 
 void main() {
   late IEnergyMeterDatasource datasource;
-  late Dio dio;
+  late ClientHttp dio;
   late DioAdapterMock dioAdapterMock;
 
   setUp(() {
-    dio = Dio();
+    dio = ClientHttp();
     dioAdapterMock = DioAdapterMock();
     dio.httpClientAdapter = dioAdapterMock;
     datasource = EnergyMeterDatasourceImpl(dio);

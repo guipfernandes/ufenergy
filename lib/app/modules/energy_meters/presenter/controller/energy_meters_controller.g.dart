@@ -9,18 +9,37 @@ part of 'energy_meters_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$EnergyMetersController on EnergyMetersControllerBase, Store {
-  final _$stateAtom = Atom(name: 'EnergyMetersControllerBase.state');
+  final _$listEnergyMetersStateAtom =
+      Atom(name: 'EnergyMetersControllerBase.listEnergyMetersState');
 
   @override
-  ControlState<List<EnergyMeterEntity>> get state {
-    _$stateAtom.reportRead();
-    return super.state;
+  ControlState<List<EnergyMeterEntity>> get listEnergyMetersState {
+    _$listEnergyMetersStateAtom.reportRead();
+    return super.listEnergyMetersState;
   }
 
   @override
-  set state(ControlState<List<EnergyMeterEntity>> value) {
-    _$stateAtom.reportWrite(value, super.state, () {
-      super.state = value;
+  set listEnergyMetersState(ControlState<List<EnergyMeterEntity>> value) {
+    _$listEnergyMetersStateAtom.reportWrite(value, super.listEnergyMetersState,
+        () {
+      super.listEnergyMetersState = value;
+    });
+  }
+
+  final _$updateLocalizationStateAtom =
+      Atom(name: 'EnergyMetersControllerBase.updateLocalizationState');
+
+  @override
+  ControlState<void> get updateLocalizationState {
+    _$updateLocalizationStateAtom.reportRead();
+    return super.updateLocalizationState;
+  }
+
+  @override
+  set updateLocalizationState(ControlState<void> value) {
+    _$updateLocalizationStateAtom
+        .reportWrite(value, super.updateLocalizationState, () {
+      super.updateLocalizationState = value;
     });
   }
 
@@ -28,11 +47,25 @@ mixin _$EnergyMetersController on EnergyMetersControllerBase, Store {
       ActionController(name: 'EnergyMetersControllerBase');
 
   @override
-  dynamic setState(ControlState<List<EnergyMeterEntity>> value) {
-    final _$actionInfo = _$EnergyMetersControllerBaseActionController
-        .startAction(name: 'EnergyMetersControllerBase.setState');
+  dynamic setListEnergyMetersState(
+      ControlState<List<EnergyMeterEntity>> value) {
+    final _$actionInfo =
+        _$EnergyMetersControllerBaseActionController.startAction(
+            name: 'EnergyMetersControllerBase.setListEnergyMetersState');
     try {
-      return super.setState(value);
+      return super.setListEnergyMetersState(value);
+    } finally {
+      _$EnergyMetersControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic setUpdateLocalizationState(ControlState<void> value) {
+    final _$actionInfo =
+        _$EnergyMetersControllerBaseActionController.startAction(
+            name: 'EnergyMetersControllerBase.setUpdateLocalizationState');
+    try {
+      return super.setUpdateLocalizationState(value);
     } finally {
       _$EnergyMetersControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -41,7 +74,8 @@ mixin _$EnergyMetersController on EnergyMetersControllerBase, Store {
   @override
   String toString() {
     return '''
-state: ${state}
+listEnergyMetersState: ${listEnergyMetersState},
+updateLocalizationState: ${updateLocalizationState}
     ''';
   }
 }

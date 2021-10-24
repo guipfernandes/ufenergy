@@ -5,7 +5,7 @@ abstract class ControlState<Result extends Object> extends Equatable {
   TResult when<TResult extends Object>({
     required TResult initial(),
     required TResult loading(),
-    required TResult success(Result result),
+    required TResult success(Result? result),
     required TResult error(Failure failure),
   }) {
     return initial();
@@ -19,7 +19,7 @@ class InitialState<Result extends Object> extends ControlState<Result> {
   TResult when<TResult extends Object>({
     required TResult initial(),
     required TResult loading(),
-    required TResult success(Result result),
+    required TResult success(Result? result),
     required TResult error(Failure failure),
   }) {
     return initial();
@@ -36,7 +36,7 @@ class LoadingState<Result extends Object> extends ControlState<Result> {
   TResult when<TResult extends Object>({
     required TResult initial(),
     required TResult loading(),
-    required TResult success(Result result),
+    required TResult success(Result? result),
     required TResult error(Failure failure),
   }) {
     return loading();
@@ -54,7 +54,7 @@ class ErrorState<Result extends Object> extends ControlState<Result> {
   TResult when<TResult extends Object>({
     required TResult initial(),
     required TResult loading(),
-    required TResult success(Result result),
+    required TResult success(Result? result),
     required TResult error(Failure failure),
   }) {
     return error(failure);
@@ -65,14 +65,14 @@ class ErrorState<Result extends Object> extends ControlState<Result> {
 }
 
 class SuccessState<Result extends Object> extends ControlState<Result> {
-  final Result result;
+  final Result? result;
   SuccessState(this.result);
 
   @override
   TResult when<TResult extends Object>({
     required TResult initial(),
     required TResult loading(),
-    required TResult success(Result result),
+    required TResult success(Result? result),
     required TResult error(Failure failure),
   }) {
     return success(result);

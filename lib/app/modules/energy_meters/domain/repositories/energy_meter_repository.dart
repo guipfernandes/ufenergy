@@ -4,4 +4,6 @@ import 'package:ufenergy/app/modules/energy_meters/domain/entities/energy_meter_
 
 abstract class IEnergyMeterRepository {
   Future<Either<Failure, List<EnergyMeterEntity>>> getEnergyMeters();
+
+  Future<Either<Failure, void>> updateMeterLocalization(EnergyMeterEntity energyMeter);
 }

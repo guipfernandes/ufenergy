@@ -1,16 +1,46 @@
-# ufenergy
+# UFenerGy
 
 An application for UFG energy control
 
-## Getting Started
+## Requirements
+- Android Studio
+- Android SDK (Installed with Android Studio)
+- Flutter SDK
 
-This project is a starting point for a Flutter application.
+## Configuration
+```console
+flutter pub get
+```
 
-A few resources to get you started if this is your first Flutter project:
+- Create an .env file based on the .env.template file
+- Create an environment variable MAPS_API_KEY with the value of the API Key created for the Maps SDK for Android on Google Cloud Platform
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Release
+### Git Flow (Release start)
+- On develop
+```git
+git flow release start {version}
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##### Update `pubspec.yaml`:
+- Version: 1.0.1+2 -> [versionName]+[versionCode]
+    - [versionName]: 1.0.1 (Major.Minor.Patch)
+    - [versionCode]: Bump 1 in each new release
+
+##### Git Flow (Release finish)
+```git
+git commit -am "{version}"
+git flow release finish {version}
+```
+
+##### Build
+- Need key.properties to generate release version (Available on Google Drive)
+```console
+flutter clean
+flutter build appbundle --release
+```
+
+##### Git (Push to remote origin)
+```git
+git push --follow-tags origin master develop
+```
